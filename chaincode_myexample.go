@@ -409,7 +409,7 @@ func (t *SimpleChaincode) issueCoinToCp(stub shim.ChaincodeStubInterface) pb.Res
 
 	//将byte的结果转换成struct
 	err = json.Unmarshal(companyToBytes, &cpTo)
-	cpTo.RestNumber = cpTo.RestNumber + Number
+	cpTo.Number = cpTo.Number + Number
 
 	jsons_cp, errs := json.Marshal(cpTo) //转换成JSON返回的是byte[]
 
