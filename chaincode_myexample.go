@@ -64,7 +64,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	var TotalNumber_center int //  发行货币总数额
 	var RestNumber_center int  //账户余额
 	var ID_center int          //中央银行ID
-
+	var err error
 	if len(args) != 4 {
 		return shim.Error("Incorrect number of arguments. Expecting 4")
 	}
@@ -76,7 +76,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	if err != nil {
 		return shim.Error("Expecting integer value for asset holding：TotalNumber_center")
 	}
-	RestNumber_center, err = strconv.Atoi(args[2])
+	RestNumber_center, err := strconv.Atoi(args[2])
 	if err != nil {
 		return shim.Error("Expecting integer value for asset holding：RestNumber_center")
 	}
@@ -112,6 +112,7 @@ func (t *SimpleChaincode) CeateBank(stub shim.ChaincodeStubInterface) pb.Respons
 	var ID int          //  中央银行ID
 
 	var bank Bank
+	var err error
 
 	if len(args) != 4 {
 		return shim.Error("Incorrect number of arguments. Expecting 4")
@@ -158,7 +159,7 @@ func (t *SimpleChaincode) CreateCompany(stub shim.ChaincodeStubInterface) pb.Res
 	var Name_company string //  银行名称
 	var Number int          //  账户余额
 	var ID_company int      //  ID
-
+	var err error
 	var company Company
 
 	if len(args) != 3 {
@@ -203,6 +204,7 @@ func (t *SimpleChaincode) IssueCoin(stub shim.ChaincodeStubInterface) pb.Respons
 	var Number int        // 发行的数量
 	var ID_trans int      //交易ID
 	var trans Transaction //交易过程
+	var err error
 	if len(args) != 2 {
 		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
@@ -262,7 +264,7 @@ func (t *SimpleChaincode) issueCoinToBank(stub shim.ChaincodeStubInterface) pb.R
 	var ID_trans int              //交易ID
 	var trans_to_bank Transaction //交易过程
 	var toBank Bank               //商业银行
-
+	var err error
 	if len(args) != 3 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
 	}
@@ -350,6 +352,7 @@ func (t *SimpleChaincode) issueCoinToCp(stub shim.ChaincodeStubInterface) pb.Res
 	var bank_to_cp Transaction //交易过程
 	var bankFrom Bank          //商业银行
 	var cpTo company           //企业
+	var err error
 	if len(args) != 4 {
 		return shim.Error("Incorrect number of arguments. Expecting 4")
 	}
@@ -431,6 +434,7 @@ func (t *SimpleChaincode) getBanks(stub shim.ChaincodeStubInterface) pb.Response
 	_, args := stub.GetFunctionAndParameters()
 	var Bank_ID string // 商业银行ID
 	var bank_info Bank
+	var err error
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
 	}
@@ -455,6 +459,7 @@ func (t *SimpleChaincode) getCompanys(stub shim.ChaincodeStubInterface) pb.Respo
 	_, args := stub.GetFunctionAndParameters()
 	var CP_ID string // 企业ID
 	var company_info Company
+	var err error
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
 	}
@@ -480,6 +485,7 @@ func (t *SimpleChaincode) getTransactions(stub shim.ChaincodeStubInterface) pb.R
 	_, args := stub.GetFunctionAndParameters()
 	var trans_ID string // 企业ID
 	var trans_info Transaction
+	var err error
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
 	}
@@ -505,6 +511,7 @@ func (t *SimpleChaincode) getCenterBank(stub shim.ChaincodeStubInterface) pb.Res
 	_, args := stub.GetFunctionAndParameters()
 	var Center_ID string // 企业ID
 	var center_info CenterBank
+	var err error
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
 	}
@@ -533,6 +540,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface) pb.Response
 	var number int  //转账金额
 	var fromCP Company
 	var toCP Company
+	var err error
 
 	if len(args) != 3 {
 		return shim.Error("Incorrect number of arguments. Expecting 3")
