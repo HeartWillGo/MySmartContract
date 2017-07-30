@@ -482,7 +482,9 @@ func (t *SimpleChaincode) getBanks(stub shim.ChaincodeStubInterface) pb.Response
 	}
 	//将byte的结果转换成struct
 	err = json.Unmarshal(BankInfo, &bank_info)
-
+	if err != nil {
+		return shim.Error(err.Error())
+	}
 	fmt.Printf("  BankInfo  = %d  \n", BankInfo)
 
 	return shim.Success(nil)
@@ -511,6 +513,9 @@ func (t *SimpleChaincode) getCompanys(stub shim.ChaincodeStubInterface) pb.Respo
 	//将byte的结果转换成struct
 
 	err = json.Unmarshal(company_info_bytes, &company_info)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
 
 	fmt.Printf("  BankInfo  = %d  \n", company_info_bytes)
 
@@ -540,7 +545,9 @@ func (t *SimpleChaincode) getTransactions(stub shim.ChaincodeStubInterface) pb.R
 	//将byte的结果转换成struct
 
 	err = json.Unmarshal(trans_info_bytes, &trans_info)
-
+	if err != nil {
+		return shim.Error(err.Error())
+	}
 	fmt.Printf("  trans_info_bytes  = %d  \n", trans_info_bytes)
 
 	return shim.Success(nil)
@@ -569,7 +576,9 @@ func (t *SimpleChaincode) getCenterBank(stub shim.ChaincodeStubInterface) pb.Res
 	//将byte的结果转换成struct
 
 	err = json.Unmarshal(center_info_bytes, &center_info)
-
+	if err != nil {
+		return shim.Error(err.Error())
+	}
 	fmt.Printf("  center_info_bytes  = %d  \n", center_info_bytes)
 
 	return shim.Success(nil)
