@@ -92,7 +92,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	center.RestNumber = RestNumber_center
 	center.ID = ID_center
 
-	jsons, errs := json.Marshal(center) //转换成JSON返回的是byte[]
+	jsons, err = json.Marshal(center) //转换成JSON返回的是byte[]
 
 	// Write the state to the ledger
 	err = stub.PutState(args[3], jsons)
@@ -141,7 +141,7 @@ func (t *SimpleChaincode) CeateBank(stub shim.ChaincodeStubInterface) pb.Respons
 	bank.RestNumber = RestNumber
 	bank.ID = ID
 
-	jsons, errs := json.Marshal(bank) //转换成JSON返回的是byte[]
+	jsons, err = json.Marshal(bank) //转换成JSON返回的是byte[]
 
 	// Write the state to the ledger
 	err = stub.PutState(args[3], jsons)
@@ -184,7 +184,7 @@ func (t *SimpleChaincode) CreateCompany(stub shim.ChaincodeStubInterface) pb.Res
 	company.Number = Number
 	company.ID = ID_company
 
-	jsons, errs := json.Marshal(company) //转换成JSON返回的是byte[]
+	jsons, err = json.Marshal(company) //转换成JSON返回的是byte[]
 
 	// Write the state to the ledger
 	err = stub.PutState(args[2], jsons)
@@ -235,7 +235,7 @@ func (t *SimpleChaincode) IssueCoin(stub shim.ChaincodeStubInterface) pb.Respons
 
 	center.RestNumber = center.RestNumber + Number
 
-	jsons, errs := json.Marshal(trans) //转换成JSON返回的是byte[]
+	jsons, err = json.Marshal(trans) //转换成JSON返回的是byte[]
 
 	// Write the state to the ledger
 	err = stub.PutState(args[1], jsons)
@@ -243,7 +243,7 @@ func (t *SimpleChaincode) IssueCoin(stub shim.ChaincodeStubInterface) pb.Respons
 		return shim.Error(err.Error())
 	}
 
-	jsons_center, errs := json.Marshal(center) //转换成JSON返回的是byte[]
+	jsons_center, err = json.Marshal(center) //转换成JSON返回的是byte[]
 
 	// Write the state to the ledger
 	err = stub.PutState("0", jsons_center)
@@ -302,7 +302,7 @@ func (t *SimpleChaincode) issueCoinToBank(stub shim.ChaincodeStubInterface) pb.R
 
 	center.RestNumber = center.RestNumber - Number
 
-	toBankInfo, err := stub.GetState(args[0])
+	toBankInfo, err = stub.GetState(args[0])
 
 	//将byte的结果转换成struct
 	err = json.Unmarshal(toBankInfo, &toBank)
@@ -311,7 +311,7 @@ func (t *SimpleChaincode) issueCoinToBank(stub shim.ChaincodeStubInterface) pb.R
 
 	fmt.Printf("  toBankInfo  = %d  \n", toBankInfo)
 
-	jsons, errs := json.Marshal(trans_to_bank) //转换成JSON返回的是byte[]
+	jsons, err = json.Marshal(trans_to_bank) //转换成JSON返回的是byte[]
 
 	ID_trans_string := strconv.Itoa(ID_trans)
 	// Write the state to the ledger
@@ -320,7 +320,7 @@ func (t *SimpleChaincode) issueCoinToBank(stub shim.ChaincodeStubInterface) pb.R
 		return shim.Error(err.Error())
 	}
 
-	jsons_toBank, errs := json.Marshal(toBank) //转换成JSON返回的是byte[]
+	jsons_toBank, err = json.Marshal(toBank) //转换成JSON返回的是byte[]
 
 	toBankID_string := strconv.Itoa(toBank.ID)
 	// Write the state to the ledger
@@ -329,7 +329,7 @@ func (t *SimpleChaincode) issueCoinToBank(stub shim.ChaincodeStubInterface) pb.R
 		return shim.Error(err.Error())
 	}
 
-	jsons_center, errs := json.Marshal(center) //转换成JSON返回的是byte[]
+	jsons_center, err = json.Marshal(center) //转换成JSON返回的是byte[]
 
 	centerID_string := strconv.Itoa(center.ID)
 	// Write the state to the ledger
@@ -392,32 +392,32 @@ func (t *SimpleChaincode) issueCoinToCp(stub shim.ChaincodeStubInterface) pb.Res
 	bank_to_cp.Number = Number
 	bank_to_cp.ID = ID
 
-	BankFromBytes, err := stub.GetState(args[0])
+	BankFromBytes, err = stub.GetState(args[0])
 
 	//将byte的结果转换成struct
 	err = json.Unmarshal(BankFromBytes, &bankFrom)
 	bankFrom.RestNumber = bankFrom.RestNumber - Number
 
-	jsons_bank, errs := json.Marshal(bankFrom) //转换成JSON返回的是byte[]
+	jsons_bank, err = json.Marshal(bankFrom) //转换成JSON返回的是byte[]
 
 	bankFromID_string := strconv.Itoa(bankFrom.ID)
 
 	// Write the state to the ledger
 	err = stub.PutState(bankFromID_string, jsons_bank)
 
-	companyToBytes, err := stub.GetState(args[1])
+	companyToBytes, err = stub.GetState(args[1])
 
 	//将byte的结果转换成struct
 	err = json.Unmarshal(companyToBytes, &cpTo)
 	cpTo.Number = cpTo.Number + Number
 
-	jsons_cp, errs := json.Marshal(cpTo) //转换成JSON返回的是byte[]
+	jsons_cp, errs = json.Marshal(cpTo) //转换成JSON返回的是byte[]
 
 	cpToID_string := strconv.Itoa(cpTo.ID)
 	// Write the state to the ledger
 	err = stub.PutState(cpToID_string, jsons_cp)
 
-	jsons, errs := json.Marshal(bank_to_cp) //转换成JSON返回的是byte[]
+	jsons, err = json.Marshal(bank_to_cp) //转换成JSON返回的是byte[]
 
 	ID_string := strconv.Itoa(ID)
 	// Write the state to the ledger
@@ -444,7 +444,7 @@ func (t *SimpleChaincode) getBanks(stub shim.ChaincodeStubInterface) pb.Response
 
 	Bank_ID = args[0]
 
-	BankInfo, err := stub.GetState(Bank_ID)
+	BankInfo, err = stub.GetState(Bank_ID)
 
 	//将byte的结果转换成struct
 	err = json.Unmarshal(BankInfo, &bank_info)
@@ -469,7 +469,7 @@ func (t *SimpleChaincode) getCompanys(stub shim.ChaincodeStubInterface) pb.Respo
 
 	CP_ID = args[0]
 
-	company_info_bytes, err := stub.GetState(CP_ID)
+	company_info_bytes, err = stub.GetState(CP_ID)
 
 	//将byte的结果转换成struct
 
@@ -495,7 +495,7 @@ func (t *SimpleChaincode) getTransactions(stub shim.ChaincodeStubInterface) pb.R
 
 	trans_ID = args[0]
 
-	trans_info_bytes, err := stub.GetState(trans_ID)
+	trans_info_bytes, err = stub.GetState(trans_ID)
 
 	//将byte的结果转换成struct
 
@@ -521,7 +521,7 @@ func (t *SimpleChaincode) getCenterBank(stub shim.ChaincodeStubInterface) pb.Res
 
 	Center_ID = args[0]
 
-	center_info_bytes, err := stub.GetState(Center_ID)
+	center_info_bytes, err = stub.GetState(Center_ID)
 
 	//将byte的结果转换成struct
 
@@ -590,7 +590,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface) pb.Response
 	to_cp_old_num := toCP.Number
 	toCP.Number = to_cp_old_num + number
 
-	jsons_from, errs := json.Marshal(fromCP) //转换成JSON返回的是byte[]
+	jsons_from, err = json.Marshal(fromCP) //转换成JSON返回的是byte[]
 
 	fromCPID_string := strconv.Itoa(fromCP.ID)
 	// Write the state to the ledger
@@ -599,7 +599,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface) pb.Response
 		return shim.Error(err.Error())
 	}
 
-	jsons_to, errs := json.Marshal(toCP) //转换成JSON返回的是byte[]
+	jsons_to, err = json.Marshal(toCP) //转换成JSON返回的是byte[]
 
 	toCPID_string := strconv.Itoa(toCP.ID)
 	// Write the state to the ledger
@@ -664,7 +664,7 @@ func (t *SimpleChaincode) query(stub shim.ChaincodeStubInterface, args []string)
 	A = args[0]
 
 	// Get the state from the ledger
-	Avalbytes, err := stub.GetState(A)
+	Avalbytes, err = stub.GetState(A)
 	if err != nil {
 		jsonResp := "{\"Error\":\"Failed to get state for " + A + "\"}"
 		return shim.Error(jsonResp)
