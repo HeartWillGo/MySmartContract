@@ -106,9 +106,9 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	return shim.Success(nil)
 }
 
-func (t *SimpleChaincode) CreateBank(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *SimpleChaincode) CreateBank(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	fmt.Println("ex02 CreateBank")
-	_, args := stub.GetFunctionAndParameters()
+
 	var Name string     //  银行名称
 	var TotalNumber int //  接收货币总数额
 	var RestNumber int  //  账户余额
@@ -159,9 +159,9 @@ func (t *SimpleChaincode) CreateBank(stub shim.ChaincodeStubInterface) pb.Respon
 }
 
 //createCompany
-func (t *SimpleChaincode) CreateCompany(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *SimpleChaincode) CreateCompany(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	fmt.Println("ex02 CreateCompany")
-	_, args := stub.GetFunctionAndParameters()
+
 	var Name_company string //  银行名称
 	var Number int          //  账户余额
 	var ID_company int      //  ID
@@ -206,9 +206,9 @@ func (t *SimpleChaincode) CreateCompany(stub shim.ChaincodeStubInterface) pb.Res
 }
 
 //issueCoin 发行货币
-func (t *SimpleChaincode) IssueCoin(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *SimpleChaincode) IssueCoin(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	fmt.Println("ex02 IssueCoin")
-	_, args := stub.GetFunctionAndParameters()
+
 	var Number int        // 发行的数量
 	var ID_trans int      //交易ID
 	var trans Transaction //交易过程
@@ -268,9 +268,9 @@ func (t *SimpleChaincode) IssueCoin(stub shim.ChaincodeStubInterface) pb.Respons
 }
 
 //issueCoinToBank  发行货币至商业银行
-func (t *SimpleChaincode) issueCoinToBank(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *SimpleChaincode) issueCoinToBank(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	fmt.Println("ex02 IssueCoin")
-	_, args := stub.GetFunctionAndParameters()
+
 	var Number int                // 发行的数量
 	var To_ID int                 //接收方ID
 	var ID_trans int              //交易ID
@@ -364,9 +364,9 @@ func (t *SimpleChaincode) issueCoinToBank(stub shim.ChaincodeStubInterface) pb.R
 }
 
 //商业银行转账到企业  issueCoinToCp
-func (t *SimpleChaincode) issueCoinToCp(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *SimpleChaincode) issueCoinToCp(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	fmt.Println("ex02 IssueCoin")
-	_, args := stub.GetFunctionAndParameters()
+
 	var Number int             // 数量
 	var From_ID int            // 商业银行ID
 	var To_ID int              //接收方ID
@@ -462,9 +462,9 @@ func (t *SimpleChaincode) issueCoinToCp(stub shim.ChaincodeStubInterface) pb.Res
 }
 
 //getBanks
-func (t *SimpleChaincode) getBanks(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *SimpleChaincode) getBanks(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	fmt.Println("ex02 getBanks")
-	_, args := stub.GetFunctionAndParameters()
+
 	var Bank_ID string // 商业银行ID
 	var bank_info Bank
 	var err error
@@ -491,9 +491,9 @@ func (t *SimpleChaincode) getBanks(stub shim.ChaincodeStubInterface) pb.Response
 }
 
 //getCompanys
-func (t *SimpleChaincode) getCompanys(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *SimpleChaincode) getCompanys(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	fmt.Println("ex02 getCompanys")
-	_, args := stub.GetFunctionAndParameters()
+
 	var CP_ID string // 企业ID
 	var company_info Company
 	var err error
@@ -523,9 +523,9 @@ func (t *SimpleChaincode) getCompanys(stub shim.ChaincodeStubInterface) pb.Respo
 }
 
 //getTransactions
-func (t *SimpleChaincode) getTransactions(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *SimpleChaincode) getTransactions(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	fmt.Println("ex02 getCompanys")
-	_, args := stub.GetFunctionAndParameters()
+
 	var trans_ID string // 企业ID
 	var trans_info Transaction
 	var err error
@@ -554,9 +554,9 @@ func (t *SimpleChaincode) getTransactions(stub shim.ChaincodeStubInterface) pb.R
 }
 
 //getCenterBank
-func (t *SimpleChaincode) getCenterBank(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *SimpleChaincode) getCenterBank(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	fmt.Println("ex02 getCenterBank")
-	_, args := stub.GetFunctionAndParameters()
+
 	var Center_ID string // 企业ID
 	var center_info CenterBank
 	var err error
@@ -585,9 +585,9 @@ func (t *SimpleChaincode) getCenterBank(stub shim.ChaincodeStubInterface) pb.Res
 }
 
 //transfer
-func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	fmt.Println("ex02 getCenterBank")
-	_, args := stub.GetFunctionAndParameters()
+
 	var From_ID int // 转账方ID
 	var To_ID int   //接收方ID
 	var number int  //转账金额
@@ -719,9 +719,6 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	} else if function == "getTransactions" {
 		// the old "Query" is now implemtned in invoke
 		return t.getTransactions(stub, args)
-	} else if function == "init" {
-		// the old "Query" is now implemtned in invoke
-		return t.Init(stub, args)
 	} else if function == "IssueCoin" {
 		// the old "Query" is now implemtned in invoke
 		return t.IssueCoin(stub, args)
