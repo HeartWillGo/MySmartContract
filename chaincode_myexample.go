@@ -294,7 +294,8 @@ func (t *SimpleChaincode) issueCoinToBank(stub shim.ChaincodeStubInterface) pb.R
 	trans_to_bank.ToID = To_ID
 
 	cur_time := time.Now()
-	trans.Time = cur_time.String()
+
+	trans_to_bank.Time = cur_time.String()
 
 	trans_to_bank.Number = Number
 	trans_to_bank.ID = ID_trans
@@ -351,7 +352,7 @@ func (t *SimpleChaincode) issueCoinToCp(stub shim.ChaincodeStubInterface) pb.Res
 	var ID int                 //交易ID
 	var bank_to_cp Transaction //交易过程
 	var bankFrom Bank          //商业银行
-	var cpTo company           //企业
+	var cpTo Company           //企业
 	var err error
 	if len(args) != 4 {
 		return shim.Error("Incorrect number of arguments. Expecting 4")
@@ -372,13 +373,13 @@ func (t *SimpleChaincode) issueCoinToCp(stub shim.ChaincodeStubInterface) pb.Res
 		return shim.Error("Expecting integer value for asset holding：To_ID  ")
 	}
 
-	ID_trans, err = strconv.Atoi(args[3])
+	ID, err = strconv.Atoi(args[3])
 
 	if err != nil {
 		return shim.Error("Expecting integer value for asset holding：ID_trans ")
 	}
 
-	fmt.Printf("  Number  = %d ,To_ID =%d , ID_trans=%d\n", Number, To_ID, ID_trans)
+	fmt.Printf("  Number  = %d ,To_ID =%d , ID_trans=%d\n", Number, To_ID, ID)
 
 	bank_to_cp.FromType = "1"
 	bank_to_cp.FromID = From_ID
@@ -386,7 +387,7 @@ func (t *SimpleChaincode) issueCoinToCp(stub shim.ChaincodeStubInterface) pb.Res
 	bank_to_cp.ToID = To_ID
 
 	cur_time := time.Now()
-	trans.Time = cur_time.String()
+	bank_to_cp.Time = cur_time.String()
 
 	bank_to_cp.Number = Number
 	bank_to_cp.ID = ID
@@ -498,7 +499,7 @@ func (t *SimpleChaincode) getTransactions(stub shim.ChaincodeStubInterface) pb.R
 
 	//将byte的结果转换成struct
 
-	err = json.Unmarshal(trans_info_bytes, &company_info)
+	err = json.Unmarshal(trans_info_bytes, &trans_info)
 
 	fmt.Printf("  trans_info_bytes  = %d  \n", trans_info_bytes)
 
