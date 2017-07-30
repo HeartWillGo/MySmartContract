@@ -314,7 +314,10 @@ func (t *SimpleChaincode) issueCoinToBank(stub shim.ChaincodeStubInterface) pb.R
 
 	center.RestNumber = center.RestNumber - Number
 
-	toBankInfo, err = stub.GetState(args[0])
+	toBankInfo, erro := stub.GetState(args[0])
+	if erro != nil {
+		return shim.Error(erro.Error())
+	}
 
 	//将byte的结果转换成struct
 	err = json.Unmarshal(toBankInfo, &toBank)
@@ -410,7 +413,10 @@ func (t *SimpleChaincode) issueCoinToCp(stub shim.ChaincodeStubInterface) pb.Res
 	bank_to_cp.Number = Number
 	bank_to_cp.ID = ID
 
-	BankFromBytes, err = stub.GetState(args[0])
+	BankFromBytes, erro := stub.GetState(args[0])
+	if erro != nil {
+		return shim.Error(erro.Error())
+	}
 
 	//将byte的结果转换成struct
 	err = json.Unmarshal(BankFromBytes, &bankFrom)
@@ -425,8 +431,10 @@ func (t *SimpleChaincode) issueCoinToCp(stub shim.ChaincodeStubInterface) pb.Res
 	// Write the state to the ledger
 	err = stub.PutState(bankFromID_string, jsons_bank)
 
-	companyToBytes, err = stub.GetState(args[1])
-
+	companyToBytes, erro1 := stub.GetState(args[1])
+	if erro1 != nil {
+		return shim.Error(erro1.Error())
+	}
 	//将byte的结果转换成struct
 	err = json.Unmarshal(companyToBytes, &cpTo)
 	cpTo.Number = cpTo.Number + Number
@@ -468,8 +476,10 @@ func (t *SimpleChaincode) getBanks(stub shim.ChaincodeStubInterface) pb.Response
 
 	Bank_ID = args[0]
 
-	BankInfo, err = stub.GetState(Bank_ID)
-
+	BankInfo, erro := stub.GetState(Bank_ID)
+	if erro != nil {
+		return shim.Error(erro.Error())
+	}
 	//将byte的结果转换成struct
 	err = json.Unmarshal(BankInfo, &bank_info)
 
@@ -493,7 +503,10 @@ func (t *SimpleChaincode) getCompanys(stub shim.ChaincodeStubInterface) pb.Respo
 
 	CP_ID = args[0]
 
-	company_info_bytes, err = stub.GetState(CP_ID)
+	company_info_bytes, erro := stub.GetState(CP_ID)
+	if erro != nil {
+		return shim.Error(erro.Error())
+	}
 
 	//将byte的结果转换成struct
 
@@ -519,7 +532,10 @@ func (t *SimpleChaincode) getTransactions(stub shim.ChaincodeStubInterface) pb.R
 
 	trans_ID = args[0]
 
-	trans_info_bytes, err = stub.GetState(trans_ID)
+	trans_info_bytes, erro := stub.GetState(trans_ID)
+	if erro != nil {
+		return shim.Error(erro.Error())
+	}
 
 	//将byte的结果转换成struct
 
@@ -545,7 +561,10 @@ func (t *SimpleChaincode) getCenterBank(stub shim.ChaincodeStubInterface) pb.Res
 
 	Center_ID = args[0]
 
-	center_info_bytes, err = stub.GetState(Center_ID)
+	center_info_bytes, erro := stub.GetState(Center_ID)
+	if erro != nil {
+		return shim.Error(erro.Error())
+	}
 
 	//将byte的结果转换成struct
 
@@ -587,7 +606,10 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface) pb.Response
 	}
 
 	fromID_string := strconv.Itoa(From_ID)
-	from_cp_info_bytes, err := stub.GetState(fromID_string)
+	from_cp_info_bytes, erro := stub.GetState(fromID_string)
+	if erro != nil {
+		return shim.Error(erro.Error())
+	}
 
 	//将byte的结果转换成struct
 
@@ -596,7 +618,10 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface) pb.Response
 	fmt.Printf("  from_cp_info_bytes  = %d  \n", from_cp_info_bytes)
 
 	To_ID_string := strconv.Itoa(To_ID)
-	to_cp_info_bytes, err := stub.GetState(To_ID_string)
+	to_cp_info_bytes, erro1 := stub.GetState(To_ID_string)
+	if erro1 != nil {
+		return shim.Error(erro1.Error())
+	}
 
 	//将byte的结果转换成struct
 
@@ -692,7 +717,10 @@ func (t *SimpleChaincode) query(stub shim.ChaincodeStubInterface, args []string)
 	A = args[0]
 
 	// Get the state from the ledger
-	Avalbytes, err = stub.GetState(A)
+	Avalbytes, erro := stub.GetState(A)
+	if erro != nil {
+		return shim.Error(erro.Error())
+	}
 	if err != nil {
 		jsonResp := "{\"Error\":\"Failed to get state for " + A + "\"}"
 		return shim.Error(jsonResp)
