@@ -651,21 +651,6 @@ func (t *SimpleChaincode) invoke(stub shim.ChaincodeStubInterface, args []string
 }
 
 // Deletes an entity from state
-func (t *SimpleChaincode) delete(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
-	}
-
-	A := args[0]
-
-	// Delete the key from the state in ledger
-	err := stub.DelState(A)
-	if err != nil {
-		return shim.Error("Failed to delete state")
-	}
-
-	return shim.Success(nil)
-}
 
 // query callback representing the query of a chaincode
 func (t *SimpleChaincode) query(stub shim.ChaincodeStubInterface, args []string) pb.Response {
