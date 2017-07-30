@@ -106,8 +106,8 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	return shim.Success(nil)
 }
 
-func (t *SimpleChaincode) CeateBank(stub shim.ChaincodeStubInterface) pb.Response {
-	fmt.Println("ex02 CeateBank")
+func (t *SimpleChaincode) CreateBank(stub shim.ChaincodeStubInterface) pb.Response {
+	fmt.Println("ex02 CreateBank")
 	_, args := stub.GetFunctionAndParameters()
 	var Name string     //  银行名称
 	var TotalNumber int //  接收货币总数额
@@ -701,6 +701,39 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	} else if function == "query" {
 		// the old "Query" is now implemtned in invoke
 		return t.query(stub, args)
+	} else if function == "CreateBank" {
+		// the old "Query" is now implemtned in invoke
+		return t.CreateBank(stub, args)
+	} else if function == "CreateCompany" {
+		// the old "Query" is now implemtned in invoke
+		return t.CreateCompany(stub, args)
+	} else if function == "getBanks" {
+		// the old "Query" is now implemtned in invoke
+		return t.getBanks(stub, args)
+	} else if function == "getCenterBank" {
+		// the old "Query" is now implemtned in invoke
+		return t.getCenterBank(stub, args)
+	} else if function == "getCompanys" {
+		// the old "Query" is now implemtned in invoke
+		return t.getCompanys(stub, args)
+	} else if function == "getTransactions" {
+		// the old "Query" is now implemtned in invoke
+		return t.getTransactions(stub, args)
+	} else if function == "init" {
+		// the old "Query" is now implemtned in invoke
+		return t.Init(stub, args)
+	} else if function == "IssueCoin" {
+		// the old "Query" is now implemtned in invoke
+		return t.IssueCoin(stub, args)
+	} else if function == "issueCoinToBank" {
+		// the old "Query" is now implemtned in invoke
+		return t.issueCoinToBank(stub, args)
+	} else if function == "issueCoinToCp" {
+		// the old "Query" is now implemtned in invoke
+		return t.issueCoinToCp(stub, args)
+	} else if function == "transfer" {
+		// the old "Query" is now implemtned in invoke
+		return t.transfer(stub, args)
 	}
 
 	return shim.Error("Invalid invoke function name. Expecting \"invoke\" \"delete\" \"query\"")
