@@ -76,7 +76,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	if err != nil {
 		return shim.Error("Expecting integer value for asset holding：TotalNumber_center")
 	}
-	RestNumber_center, err := strconv.Atoi(args[2])
+	RestNumber_center, err = strconv.Atoi(args[2])
 	if err != nil {
 		return shim.Error("Expecting integer value for asset holding：RestNumber_center")
 	}
@@ -191,7 +191,7 @@ func (t *SimpleChaincode) CreateCompany(stub shim.ChaincodeStubInterface) pb.Res
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	CreateCompany
+
 	fmt.Printf("CreateCompany \n")
 
 	return shim.Success(nil)
@@ -228,8 +228,8 @@ func (t *SimpleChaincode) IssueCoin(stub shim.ChaincodeStubInterface) pb.Respons
 	trans.ToType = "0"
 	trans.ToID = 0
 
-	t := time.Now()
-	trans.Time = t.String()
+	cur_time := time.Now()
+	trans.Time = cur_time.String()
 	trans.Number = Number
 	trans.ID = ID_trans
 
@@ -246,7 +246,7 @@ func (t *SimpleChaincode) IssueCoin(stub shim.ChaincodeStubInterface) pb.Respons
 	jsons_center, errs := json.Marshal(center) //转换成JSON返回的是byte[]
 
 	// Write the state to the ledger
-	err = stub.PutState(0, jsons_center)
+	err = stub.PutState("0", jsons_center)
 
 	if err != nil {
 		return shim.Error(err.Error())
@@ -280,7 +280,7 @@ func (t *SimpleChaincode) issueCoinToBank(stub shim.ChaincodeStubInterface) pb.R
 		return shim.Error("Expecting integer value for asset holding：To_ID  ")
 	}
 
-	ID_trans, err := strconv.Atoi(args[2])
+	ID_trans, err = strconv.Atoi(args[2])
 
 	if err != nil {
 		return shim.Error("Expecting integer value for asset holding：ID_trans ")
@@ -293,8 +293,8 @@ func (t *SimpleChaincode) issueCoinToBank(stub shim.ChaincodeStubInterface) pb.R
 	trans_to_bank.ToType = "1"
 	trans_to_bank.ToID = To_ID
 
-	t := time.Now()
-	trans_to_bank.Time = t.String()
+	cur_time := time.Now()
+	trans.Time = cur_time.String()
 
 	trans_to_bank.Number = Number
 	trans_to_bank.ID = ID_trans
@@ -385,8 +385,8 @@ func (t *SimpleChaincode) issueCoinToCp(stub shim.ChaincodeStubInterface) pb.Res
 	bank_to_cp.ToType = "2"
 	bank_to_cp.ToID = To_ID
 
-	t := time.Now()
-	bank_to_cp.Time = t.String()
+	cur_time := time.Now()
+	trans.Time = cur_time.String()
 
 	bank_to_cp.Number = Number
 	bank_to_cp.ID = ID
