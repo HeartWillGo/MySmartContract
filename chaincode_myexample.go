@@ -10,7 +10,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -75,15 +74,15 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 
 	TotalNumber_center, err = strconv.Atoi(args[1])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：TotalNumber_center")
+		return shim.Error("Expecting integer value for asset holding：TotalNumber_center")
 	}
 	RestNumber_center, err = strconv.Atoi(args[2])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：RestNumber_center")
+		return shim.Error("Expecting integer value for asset holding：RestNumber_center")
 	}
 	ID_center, err = strconv.Atoi(args[3])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：ID_center")
+		return shim.Error("Expecting integer value for asset holding：ID_center")
 	}
 
 	fmt.Printf("centerBankName = %d, TotalNumber_center = %d, RestNumber_center=%d,ID_center=%d\n", centerBankName, TotalNumber_center, RestNumber_center, ID_center)
@@ -100,7 +99,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	fmt.Printf(" 初始化成功 \n")
+	fmt.Printf(" init success \n")
 	return shim.Success(nil)
 }
 
@@ -123,15 +122,15 @@ func (t *SimpleChaincode) CeateBank(stub shim.ChaincodeStubInterface) pb.Respons
 
 	TotalNumber, err = strconv.Atoi(args[1])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：TotalNumber ")
+		return shim.Error("Expecting integer value for asset holding：TotalNumber ")
 	}
 	RestNumber, err = strconv.Atoi(args[2])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：RestNumber ")
+		return shim.Error("Expecting integer value for asset holding：RestNumber ")
 	}
 	ID, err = strconv.Atoi(args[3])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：ID ")
+		return shim.Error("Expecting integer value for asset holding：ID ")
 	}
 
 	fmt.Printf(" Name = %d, TotalNumber  = %d, RestNumber =%d,ID =%d\n", Name, TotalNumber, RestNumber, ID)
@@ -148,7 +147,7 @@ func (t *SimpleChaincode) CeateBank(stub shim.ChaincodeStubInterface) pb.Respons
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	fmt.Printf(" 创建银行成功 \n")
+	fmt.Printf(" CeateBank success \n")
 	return shim.Success(nil)
 }
 
@@ -171,11 +170,11 @@ func (t *SimpleChaincode) CreateCompany(stub shim.ChaincodeStubInterface) pb.Res
 
 	Number, err = strconv.Atoi(args[1])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：Number ")
+		return shim.Error("Expecting integer value for asset holding：Number ")
 	}
 	ID_company, err = strconv.Atoi(args[2])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：ID_company ")
+		return shim.Error("Expecting integer value for asset holding：ID_company ")
 	}
 
 	fmt.Printf(" Name_company = %d, Number  = %d,ID_company =%d\n", Name_company, Number, ID_company)
@@ -191,6 +190,8 @@ func (t *SimpleChaincode) CreateCompany(stub shim.ChaincodeStubInterface) pb.Res
 	if err != nil {
 		return shim.Error(err.Error())
 	}
+	CreateCompany
+	fmt.Printf("CreateCompany \n")
 
 	return shim.Success(nil)
 }
@@ -210,12 +211,12 @@ func (t *SimpleChaincode) IssueCoin(stub shim.ChaincodeStubInterface) pb.Respons
 
 	Number, err = strconv.Atoi(args[0])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：Number ")
+		return shim.Error("Expecting integer value for asset holding：Number ")
 	}
 	ID_trans, err = strconv.Atoi(args[1])
 
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：ID_trans ")
+		return shim.Error("Expecting integer value for asset holding：ID_trans ")
 	}
 
 	fmt.Printf("  Number  = %d ,ID_trans = %d \n", Number, ID_trans)
@@ -227,19 +228,28 @@ func (t *SimpleChaincode) IssueCoin(stub shim.ChaincodeStubInterface) pb.Respons
 
 	t := time.Now()
 	trans.Time = t.String()
-
 	trans.Number = Number
 	trans.ID = ID_trans
+
+	center.RestNumber = center.RestNumber + Number
 
 	jsons, errs := json.Marshal(trans) //转换成JSON返回的是byte[]
 
 	// Write the state to the ledger
 	err = stub.PutState(args[1], jsons)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	jsons_center, errs := json.Marshal(center) //转换成JSON返回的是byte[]
+
+	// Write the state to the ledger
+	err = stub.PutState(0, jsons_center)
 
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	fmt.Printf(" 发行货币成功 \n")
+	fmt.Printf(" IssueCoin success \n")
 	return shim.Success(nil)
 }
 
@@ -261,17 +271,17 @@ func (t *SimpleChaincode) issueCoinToBank(stub shim.ChaincodeStubInterface) pb.R
 
 	Number, err = strconv.Atoi(args[1])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：Number ")
+		return shim.Error("Expecting integer value for asset holding：Number ")
 	}
 	To_ID, err = strconv.Atoi(args[0])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：To_ID  ")
+		return shim.Error("Expecting integer value for asset holding：To_ID  ")
 	}
 
-	ID_trans, err = strconv.Atoi(args[2])
+	ID_trans, err := strconv.Atoi(args[2])
 
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：ID_trans ")
+		return shim.Error("Expecting integer value for asset holding：ID_trans ")
 	}
 
 	fmt.Printf("  Number  = %d ,To_ID =%d , ID_trans=%d\n", Number, To_ID, ID_trans)
@@ -300,29 +310,32 @@ func (t *SimpleChaincode) issueCoinToBank(stub shim.ChaincodeStubInterface) pb.R
 
 	jsons, errs := json.Marshal(trans_to_bank) //转换成JSON返回的是byte[]
 
+	ID_trans_string := strconv.Itoa(ID_trans)
 	// Write the state to the ledger
-	err = stub.PutState(ID_trans, jsons)
+	err = stub.PutState(ID_trans_string, jsons)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 
 	jsons_toBank, errs := json.Marshal(toBank) //转换成JSON返回的是byte[]
 
+	toBankID_string := strconv.Itoa(toBank.ID)
 	// Write the state to the ledger
-	err = stub.PutState(toBank.ID, jsons_toBank)
+	err = stub.PutState(toBankID_string, jsons_toBank)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 
 	jsons_center, errs := json.Marshal(center) //转换成JSON返回的是byte[]
 
+	centerID_string := strconv.Itoa(center.ID)
 	// Write the state to the ledger
-	err = stub.PutState(center.ID, jsons_center)
+	err = stub.PutState(centerID_string, jsons_center)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 
-	fmt.Printf("  发行货币至商业银行 成功 \n")
+	fmt.Printf("  issueCoinToBank success \n")
 	return shim.Success(nil)
 }
 
@@ -345,21 +358,21 @@ func (t *SimpleChaincode) issueCoinToCp(stub shim.ChaincodeStubInterface) pb.Res
 
 	From_ID, err = strconv.Atoi(args[0])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：From_ID ")
+		return shim.Error("Expecting integer value for asset holding：From_ID ")
 	}
 	Number, err = strconv.Atoi(args[2])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：Number ")
+		return shim.Error("Expecting integer value for asset holding：Number ")
 	}
 	To_ID, err = strconv.Atoi(args[1])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：To_ID  ")
+		return shim.Error("Expecting integer value for asset holding：To_ID  ")
 	}
 
 	ID_trans, err = strconv.Atoi(args[3])
 
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：ID_trans ")
+		return shim.Error("Expecting integer value for asset holding：ID_trans ")
 	}
 
 	fmt.Printf("  Number  = %d ,To_ID =%d , ID_trans=%d\n", Number, To_ID, ID_trans)
@@ -383,8 +396,10 @@ func (t *SimpleChaincode) issueCoinToCp(stub shim.ChaincodeStubInterface) pb.Res
 
 	jsons_bank, errs := json.Marshal(bankFrom) //转换成JSON返回的是byte[]
 
+	bankFromID_string := strconv.Itoa(bankFrom.ID)
+
 	// Write the state to the ledger
-	err = stub.PutState(bankFrom.ID, jsons_bank)
+	err = stub.PutState(bankFromID_string, jsons_bank)
 
 	companyToBytes, err := stub.GetState(args[1])
 
@@ -394,13 +409,15 @@ func (t *SimpleChaincode) issueCoinToCp(stub shim.ChaincodeStubInterface) pb.Res
 
 	jsons_cp, errs := json.Marshal(cpTo) //转换成JSON返回的是byte[]
 
+	cpToID_string := strconv.Itoa(cpTo.ID)
 	// Write the state to the ledger
-	err = stub.PutState(cpTo.ID, jsons_cp)
+	err = stub.PutState(cpToID_string, jsons_cp)
 
 	jsons, errs := json.Marshal(bank_to_cp) //转换成JSON返回的是byte[]
 
+	ID_string := strconv.Itoa(ID)
 	// Write the state to the ledger
-	err = stub.PutState(ID, jsons)
+	err = stub.PutState(ID_string, jsons)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -496,7 +513,7 @@ func (t *SimpleChaincode) getCenterBank(stub shim.ChaincodeStubInterface) pb.Res
 
 	Center_ID = args[0]
 
-	center_info_bytes, err := stub.GetState(trans_ID)
+	center_info_bytes, err := stub.GetState(Center_ID)
 
 	//将byte的结果转换成struct
 
@@ -525,18 +542,19 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface) pb.Response
 
 	From_ID, err = strconv.Atoi(args[0])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：From_ID  ")
+		return shim.Error("Expecting integer value for asset holding：From_ID  ")
 	}
 	To_ID, err = strconv.Atoi(args[1])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：To_ID  ")
+		return shim.Error("Expecting integer value for asset holding：To_ID  ")
 	}
 	number, err = strconv.Atoi(args[2])
 	if err != nil {
-		return shim.Error("字符串转换为整数失败：number ")
+		return shim.Error("Expecting integer value for asset holding：number ")
 	}
 
-	from_cp_info_bytes, err := stub.GetState(From_ID)
+	fromID_string := strconv.Itoa(From_ID)
+	from_cp_info_bytes, err := stub.GetState(fromID_string)
 
 	//将byte的结果转换成struct
 
@@ -544,7 +562,8 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface) pb.Response
 
 	fmt.Printf("  from_cp_info_bytes  = %d  \n", from_cp_info_bytes)
 
-	to_cp_info_bytes, err := stub.GetState(To_ID)
+	To_ID_string := strconv.Itoa(To_ID)
+	to_cp_info_bytes, err := stub.GetState(To_ID_string)
 
 	//将byte的结果转换成struct
 
@@ -554,7 +573,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface) pb.Response
 
 	from_cp_old_num := fromCP.Number
 	if from_cp_old_num <= number {
-		return shim.Error("余额不足")
+		return shim.Error("money no enough")
 	}
 
 	fromCP.Number = from_cp_old_num - number
@@ -564,77 +583,22 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface) pb.Response
 
 	jsons_from, errs := json.Marshal(fromCP) //转换成JSON返回的是byte[]
 
+	fromCPID_string := strconv.Itoa(fromCP.ID)
 	// Write the state to the ledger
-	err = stub.PutState(fromCP.ID, jsons_from)
+	err = stub.PutState(fromCPID_string, jsons_from)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 
 	jsons_to, errs := json.Marshal(toCP) //转换成JSON返回的是byte[]
 
+	toCPID_string := strconv.Itoa(toCP.ID)
 	// Write the state to the ledger
-	err = stub.PutState(toCP.ID, jsons_to)
+	err = stub.PutState(toCPID_string, jsons_to)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	fmt.Printf(" 转账成功 \n")
-	return shim.Success(nil)
-}
-
-// Transaction makes payment of X units from A to B
-func (t *SimpleChaincode) invoke(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var A, B string    // Entities
-	var Aval, Bval int // Asset holdings
-	var X int          // Transaction value
-	var err error
-
-	if len(args) != 3 {
-		return shim.Error("Incorrect number of arguments. Expecting 3")
-	}
-
-	A = args[0]
-	B = args[1]
-
-	// Get the state from the ledger
-	// TODO: will be nice to have a GetAllState call to ledger
-	Avalbytes, err := stub.GetState(A)
-	if err != nil {
-		return shim.Error("Failed to get state")
-	}
-	if Avalbytes == nil {
-		return shim.Error("Entity not found")
-	}
-	Aval, _ = strconv.Atoi(string(Avalbytes))
-
-	Bvalbytes, err := stub.GetState(B)
-	if err != nil {
-		return shim.Error("Failed to get state")
-	}
-	if Bvalbytes == nil {
-		return shim.Error("Entity not found")
-	}
-	Bval, _ = strconv.Atoi(string(Bvalbytes))
-
-	// Perform the execution
-	X, err = strconv.Atoi(args[2])
-	if err != nil {
-		return shim.Error("Invalid transaction amount, expecting a integer value")
-	}
-	Aval = Aval - X
-	Bval = Bval + X
-	fmt.Printf("Aval = %d, Bval = %d\n", Aval, Bval)
-
-	// Write the state back to the ledger
-	err = stub.PutState(A, []byte(strconv.Itoa(Aval)))
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-
-	err = stub.PutState(B, []byte(strconv.Itoa(Bval)))
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-
+	fmt.Printf(" transfer success \n")
 	return shim.Success(nil)
 }
 
@@ -653,34 +617,6 @@ func (t *SimpleChaincode) delete(stub shim.ChaincodeStubInterface, args []string
 	}
 
 	return shim.Success(nil)
-}
-
-// query callback representing the query of a chaincode
-func (t *SimpleChaincode) query(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	var A string // Entities
-	var err error
-
-	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting name of the person to query")
-	}
-
-	A = args[0]
-
-	// Get the state from the ledger
-	Avalbytes, err := stub.GetState(A)
-	if err != nil {
-		jsonResp := "{\"Error\":\"Failed to get state for " + A + "\"}"
-		return shim.Error(jsonResp)
-	}
-
-	if Avalbytes == nil {
-		jsonResp := "{\"Error\":\"Nil amount for " + A + "\"}"
-		return shim.Error(jsonResp)
-	}
-
-	jsonResp := "{\"Name\":\"" + A + "\",\"Amount\":\"" + string(Avalbytes) + "\"}"
-	fmt.Printf("Query Response:%s\n", jsonResp)
-	return shim.Success(Avalbytes)
 }
 
 func main() {
