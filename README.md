@@ -126,6 +126,8 @@ response 参数:
 ```
 getBanks
 response 参数
+
+
 [{"Name":"XXX","Number":"XX","ID":"XX"},{"Name":"XXX","Number":"XX","ID":"XX"},...]
 ```
 ```
@@ -191,3 +193,6 @@ response 参数
  err nil 为成功 
 ```
 我是按照这个架构来实现了一个数字货币发行与管理的智能合约的
+
+
+# 微信：zp1570316775
